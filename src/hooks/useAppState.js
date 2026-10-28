@@ -6,8 +6,6 @@ export function useAppState() {
     audioFile: null,
     fileName: null,
     fileSize: null,
-    detectedKey: null,
-    confirmedKey: null,
     transcription: null,
     musicXmlData: null,
     error: null,
@@ -20,7 +18,10 @@ export function useAppState() {
       audioFile: file,
       fileName: file ? file.name : null,
       fileSize: file ? file.size : null,
-      error: null
+      error: null,
+      currentPhase: 'upload',
+      transcription: null,
+      musicXmlData: null
     }))
   }
 
@@ -35,21 +36,6 @@ export function useAppState() {
     setState(prev => ({
       ...prev,
       loading: isLoading
-    }))
-  }
-
-  const setDetectedKey = (key) => {
-    setState(prev => ({
-      ...prev,
-      detectedKey: key
-    }))
-  }
-
-  const setConfirmedKey = (key) => {
-    setState(prev => ({
-      ...prev,
-      confirmedKey: key,
-      currentPhase: 'transcribing'
     }))
   }
 
@@ -83,8 +69,6 @@ export function useAppState() {
       audioFile: null,
       fileName: null,
       fileSize: null,
-      detectedKey: null,
-      confirmedKey: null,
       transcription: null,
       musicXmlData: null,
       error: null,
@@ -97,8 +81,6 @@ export function useAppState() {
     setAudioFile,
     setPhase,
     setLoading,
-    setDetectedKey,
-    setConfirmedKey,
     setTranscription,
     setMusicXmlData,
     setError,

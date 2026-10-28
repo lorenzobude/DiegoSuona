@@ -8,3 +8,7 @@ dist/
 .idea/
 *.swp
 *.swo
+backend/uploads/
+*.wav
+*.mp3
+.env.production

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { validateMp3File, formatFileSize } from '../services/fileValidator'
 
-export default function FileUpload({ state, onFileSelected, onAnalyzeStart }) {
+export default function FileUpload({ state, onFileSelected, onTranscriptionStart }) {
   const inputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -18,23 +18,27 @@ export default function FileUpload({ state, onFileSelected, onAnalyzeStart }) {
     onFileSelected(file, null)
   }
 
-  const handleAnalyzeClick = () => {
+  const handleTranscribeClick = () => {
     if (state.audioFile) {
-      onAnalyzeStart()
+      onTranscriptionStart()
     }
   }
 
   return (
     <section>
-      <h2>Fase A — Caricamento MP3</h2>
+      <h2>Caricamento audio</h2>
+      <p>
+        La trascrizione è sperimentale: la melodia è la voce più alta riconosciuta,
+        quindi non separa gli strumenti né garantisce di identificare la melodia principale.
+      </p>
 
       <div>
-        <label htmlFor="file-input">Seleziona file MP3:</label>
+        <label htmlFor="file-input">Seleziona file MP3 o WAV:</label>
         <input
           id="file-input"
           ref={inputRef}
           type="file"
-          accept=".mp3,audio/mpeg"
+          accept=".mp3,.wav,audio/mpeg,audio/wav"
           onChange={handleFileChange}
           disabled={state.loading}
         />
@@ -54,11 +58,15 @@ export default function FileUpload({ state, onFileSelected, onAnalyzeStart }) {
       )}
 
       <button
-        onClick={handleAnalyzeClick}
+        onClick={handleTranscribeClick}
         disabled={!state.audioFile || state.loading}
       >
-        {state.loading ? 'Analisi in corso...' : 'Analizza'}
+        {state.loading ? 'Generazione spartito in corso...' : 'Genera spartito'}
       </button>
+
+      {state.error && state.currentPhase === 'error' && (
+        <p role="alert">Errore: {state.error.message}</p>
+      )}
 
       <hr />
     </section>

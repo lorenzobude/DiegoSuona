@@ -1,31 +1,48 @@
-export async function generateDemoTranscription(key) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const demoNotes = [
-        { pitch: 'C4', duration: 'quarter', time: 0 },
-        { pitch: 'D4', duration: 'quarter', time: 1 },
-        { pitch: 'E4', duration: 'quarter', time: 2 },
-        { pitch: 'F4', duration: 'quarter', time: 3 },
-        { pitch: 'G4', duration: 'half', time: 4 },
-        { pitch: 'A4', duration: 'quarter', time: 6 },
-        { pitch: 'G4', duration: 'quarter', time: 7 },
-        { pitch: 'F4', duration: 'quarter', time: 8 },
-        { pitch: 'E4', duration: 'quarter', time: 9 },
-        { pitch: 'D4', duration: 'half', time: 10 }
-      ]
+import { validateMp3File } from './fileValidator.js'
 
-      resolve({
-        success: true,
-        notes: demoNotes,
-        isDemo: true,
-        message: 'Nota: questa è una trascrizione simulata per il testing del flusso. Non è una trascrizione reale del file MP3 caricato.'
-      })
-    }, 2000)
-  })
-}
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
 
-export async function transcribeAudio(arrayBuffer, key) {
-  console.log('Modalità demo: generazione trascrizione fittizia per la tonalità', key)
+export async function transcribeAudio(file) {
+  try {
+    const validation = validateMp3File(file)
+    if (!validation.valid) {
+      throw new Error(validation.message)
+    }
 
-  return generateDemoTranscription(key)
+    console.log(`[Frontend] Sending file to backend: ${file.name}`)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await fetch(`${BACKEND_URL}/api/transcribe`, {
+      method: 'POST',
+      body: formData
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || `HTTP ${response.status}`)
+    }
+
+    const result = await response.json()
+
+    if (!result.success) {
+      throw new Error(result.error || 'Transcription failed')
+    }
+
+    console.log(`[Frontend] Transcription complete: ${result.notes.length} notes`)
+
+    return {
+      success: true,
+      notes: result.notes,
+      metadata: result.metadata
+    }
+  } catch (error) {
+    console.error('[Frontend] Transcription error:', error.message)
+    return {
+      success: false,
+      error: error.message,
+      code: 'TRANSCRIPTION_ERROR'
+    }
+  }
 }

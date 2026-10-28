@@ -1,5 +1,6 @@
 const MAX_FILE_SIZE = 50 * 1024 * 1024
-const ALLOWED_MIME_TYPES = ['audio/mpeg', 'audio/mp3']
+const ALLOWED_MIME_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/wav']
+const ALLOWED_EXTENSIONS = ['.mp3', '.wav']
 
 export function validateMp3File(file) {
   if (!file) {
@@ -9,10 +10,13 @@ export function validateMp3File(file) {
     }
   }
 
-  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+  const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase()
+  const isSupportedType = ALLOWED_MIME_TYPES.includes(file.type) || ALLOWED_EXTENSIONS.includes(fileExtension)
+
+  if (!isSupportedType) {
     return {
       valid: false,
-      message: 'Il file deve essere in formato MP3'
+      message: 'Il file deve essere in formato MP3 o WAV'
     }
   }
 
