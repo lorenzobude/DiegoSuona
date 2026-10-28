@@ -20,7 +20,6 @@ async function loadModel() {
     await tf.setBackend('cpu')
   }
   await tf.ready()
-  console.log(`[PolyphonicDetector] TensorFlow backend: ${tf.getBackend()}`)
 
   const modelJson = JSON.parse(fs.readFileSync(path.join(modelDirectory, 'model.json'), 'utf8'))
   const weightBuffer = fs.readFileSync(path.join(modelDirectory, 'group1-shard1of1.bin'))
@@ -43,7 +42,7 @@ function getBasicPitch() {
   return basicPitchPromise
 }
 
-export async function detectNotes(audioBuffer, onProgress) {
+export async function detectNotes(audioBuffer) {
   const basicPitch = await getBasicPitch()
   const frames = []
   const onsets = []
@@ -56,18 +55,10 @@ export async function detectNotes(audioBuffer, onProgress) {
       onsets.push(...batchOnsets)
       contours.push(...batchContours)
     },
-    percent => {
-      if (onProgress) onProgress(percent)
-    }
+    () => {}
   )
 
-  const notes = noteFramesToTime(
+  return noteFramesToTime(
     addPitchBendsToNoteEvents(contours, outputToNotesPoly(frames, onsets, 0.5, 0.3, 5))
   )
-
-  return notes
-}
-
-export default {
-  detectNotes
 }

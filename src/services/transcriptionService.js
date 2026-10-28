@@ -1,15 +1,13 @@
-import { validateMp3File } from './fileValidator.js'
+import { validateAudioFile } from './fileValidator.js'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
 
 export async function transcribeAudio(file) {
   try {
-    const validation = validateMp3File(file)
+    const validation = validateAudioFile(file)
     if (!validation.valid) {
       throw new Error(validation.message)
     }
-
-    console.log(`[Frontend] Sending file to backend: ${file.name}`)
 
     const formData = new FormData()
     formData.append('file', file)
@@ -30,15 +28,12 @@ export async function transcribeAudio(file) {
       throw new Error(result.error || 'Transcription failed')
     }
 
-    console.log(`[Frontend] Transcription complete: ${result.notes.length} notes`)
-
     return {
       success: true,
       notes: result.notes,
       metadata: result.metadata
     }
   } catch (error) {
-    console.error('[Frontend] Transcription error:', error.message)
     return {
       success: false,
       error: error.message,

@@ -2,7 +2,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024
 const ALLOWED_MIME_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/wav']
 const ALLOWED_EXTENSIONS = ['.mp3', '.wav']
 
-export function validateMp3File(file) {
+export function validateAudioFile(file) {
   if (!file) {
     return {
       valid: false,

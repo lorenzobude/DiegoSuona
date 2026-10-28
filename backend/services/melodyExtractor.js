@@ -153,9 +153,3 @@ export function melodyToScoreNotes(melody, tempo) {
     return cleaned
   }, [])
 }
-
-export default {
-  extractMelody,
-  estimateTempo,
-  melodyToScoreNotes
-}

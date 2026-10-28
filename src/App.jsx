@@ -25,7 +25,6 @@ export default function App() {
       const transcriptionResult = await transcribeAudio(appState.state.audioFile)
 
       if (transcriptionResult.success) {
-        appState.setTranscription(transcriptionResult.notes)
         appState.setPhase('exporting')
 
         const title = appState.state.fileName.replace(/\.[^.]+$/, '')

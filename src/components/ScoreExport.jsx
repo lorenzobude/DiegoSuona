@@ -1,15 +1,11 @@
 import { downloadMusicXml } from '../services/musicXmlGenerator'
 
-export default function ScoreExport({ state, isActive, onExportStart, onReset }) {
+export default function ScoreExport({ state, isActive, onReset }) {
   const handleDownload = () => {
     if (state.musicXmlData) {
       const fileName = `${state.fileName.replace(/\.[^.]+$/, '')}.musicxml`
       downloadMusicXml(state.musicXmlData, fileName)
     }
-  }
-
-  const handleReset = () => {
-    onReset()
   }
 
   if (!isActive) {
@@ -50,7 +46,7 @@ export default function ScoreExport({ state, isActive, onExportStart, onReset })
 
       <div>
         <p>Desideri convertire un altro file audio?</p>
-        <button onClick={handleReset}>
+        <button onClick={onReset}>
           ↻ Ricomincia
         </button>
       </div>

@@ -5,8 +5,6 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export function uploadHandler(req, res, next) {
-  console.log('[Middleware] uploadHandler called')
-
   const form = formidable({
     uploadDir: path.join(__dirname, '../uploads'),
     keepExtensions: true,
@@ -14,11 +12,7 @@ export function uploadHandler(req, res, next) {
   })
 
   form.parse(req, (err, fields, files) => {
-    console.log('[Middleware] Form parsed')
-    console.log('[Middleware] Files object:', files)
-
     if (err) {
-      console.error('[Middleware] Parse error:', err.message)
       return res.status(400).json({
         success: false,
         error: err.message,
@@ -26,15 +20,9 @@ export function uploadHandler(req, res, next) {
       })
     }
 
-    let file = null
-    if (files.file) {
-      file = Array.isArray(files.file) ? files.file[0] : files.file
-    }
-
-    console.log('[Middleware] File found:', file ? file.originalFilename : 'null')
+    const file = Array.isArray(files.file) ? files.file[0] : files.file
 
     if (!file) {
-      console.warn('[Middleware] No file found in request')
       return res.status(400).json({
         success: false,
         error: 'No file provided',
@@ -43,15 +31,12 @@ export function uploadHandler(req, res, next) {
     }
 
     if (!file.mimetype || !file.mimetype.includes('audio')) {
-      console.warn('[Middleware] Invalid MIME type:', file.mimetype)
       return res.status(400).json({
         success: false,
         error: 'File must be audio format',
         code: 'INVALID_FORMAT'
       })
     }
-
-    console.log('[Middleware] File accepted:', file.originalFilename)
 
     req.uploadedFile = {
       path: file.filepath,

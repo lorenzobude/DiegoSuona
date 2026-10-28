@@ -6,7 +6,6 @@ export function useAppState() {
     audioFile: null,
     fileName: null,
     fileSize: null,
-    transcription: null,
     musicXmlData: null,
     error: null,
     loading: false
@@ -20,7 +19,6 @@ export function useAppState() {
       fileSize: file ? file.size : null,
       error: null,
       currentPhase: 'upload',
-      transcription: null,
       musicXmlData: null
     }))
   }
@@ -36,13 +34,6 @@ export function useAppState() {
     setState(prev => ({
       ...prev,
       loading: isLoading
-    }))
-  }
-
-  const setTranscription = (notes) => {
-    setState(prev => ({
-      ...prev,
-      transcription: notes
     }))
   }
 
@@ -69,7 +60,6 @@ export function useAppState() {
       audioFile: null,
       fileName: null,
       fileSize: null,
-      transcription: null,
       musicXmlData: null,
       error: null,
       loading: false
@@ -81,7 +71,6 @@ export function useAppState() {
     setAudioFile,
     setPhase,
     setLoading,
-    setTranscription,
     setMusicXmlData,
     setError,
     reset

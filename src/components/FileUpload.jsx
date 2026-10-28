@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { validateMp3File, formatFileSize } from '../services/fileValidator'
+import { validateAudioFile, formatFileSize } from '../services/fileValidator'
 
 export default function FileUpload({ state, onFileSelected, onTranscriptionStart }) {
   const inputRef = useRef(null)
@@ -8,7 +8,7 @@ export default function FileUpload({ state, onFileSelected, onTranscriptionStart
     const file = e.target.files[0]
     if (!file) return
 
-    const validation = validateMp3File(file)
+    const validation = validateAudioFile(file)
     if (!validation.valid) {
       onFileSelected(null, validation.message)
       inputRef.current.value = ''
@@ -27,10 +27,6 @@ export default function FileUpload({ state, onFileSelected, onTranscriptionStart
   return (
     <section>
       <h2>Caricamento audio</h2>
-      <p>
-        La trascrizione è sperimentale: la melodia è la voce più alta riconosciuta,
-        quindi non separa gli strumenti né garantisce di identificare la melodia principale.
-      </p>
 
       <div>
         <label htmlFor="file-input">Seleziona file MP3 o WAV:</label>
