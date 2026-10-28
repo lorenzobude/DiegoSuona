@@ -10,10 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173'
 
-app.use(cors({
-  origin: CORS_ORIGIN,
-  credentials: true
-}))
+app.use(cors({ origin: CORS_ORIGIN }))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -52,5 +49,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`)
 })
-
-export default app
